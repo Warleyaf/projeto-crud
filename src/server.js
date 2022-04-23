@@ -1,7 +1,13 @@
 const express = require('express')
 const path = require('path')
+const bcrypt = require('bcrypt')
 
+const db = require('./database') // Não preciso informar o arquivo index, por que como ele está sozinho já entende que é ele que eu quero importar
+const routes = require('./routes') // Impiortando o meu router que stá na pastar routes
 const app = express()
+
+// Conexão com o banco de dados
+db.connect()
 
 // definindo o template engine
 app.set('view engine', 'ejs')
@@ -13,12 +19,9 @@ app.use(express.static(path.join(__dirname, 'public')))
 // habilita server para receber dados via post (formulário)
 app.use(express.urlencoded({ extended: true }))
 
-//rotas
-app.get('/', (req, res) => {
-  res.render('index', {
-    title: 'Titulo Test'
-  })
-})
+// definindo as rotas
+app.use('/', routes)
+
 
 // 404 error (not found)
 app.use((req, res) => { //middleware
